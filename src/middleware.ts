@@ -15,6 +15,7 @@ export default clerkMiddleware((auth ,req)=>{
         auth().protect();
   
       }
+      publicRoutes:['/api/webhooks/clerk']
   });
 
 
@@ -26,4 +27,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}; 
