@@ -39,12 +39,15 @@ export const connectToDatabase=async()=>{
     }
     if(!MONGODB_URL)
     {
+      console.log("MONGODN URL not found")
         throw new Error("Missing mongodb uri");
-    }
-    cached.promise=cached.promise ||mongoose.connect(MONGODB_URL ,{
+    } 
+    console.log("Before cached.promise");
+    cached.promise=cached.promise || mongoose.connect(MONGODB_URL ,{
         dbName:" NEWRETOUCHLAB" , bufferCommands:false
         
     })
+    console.log("waiting for promise to return")
     cached.conn=await cached.promise;
     console.log("Connected to database" , cached.conn);
     return cached.conn;
