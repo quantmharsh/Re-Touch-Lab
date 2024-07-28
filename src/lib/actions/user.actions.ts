@@ -9,6 +9,7 @@ import { handleError } from "../utils";
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
+    console.log("Trying to connect to db ")
     await connectToDatabase();
    console.log("connected to db successfully")
     const newUser = await User.create(user);
@@ -37,6 +38,7 @@ export async function getUserById(userId: string) {
 // UPDATE
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
+    console.log("Trying to connect to db ")
     await connectToDatabase();
     console.log("connected to db successfully")
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
