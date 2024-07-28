@@ -10,7 +10,7 @@ const protectedRoutes=createRouteMatcher([
 ]) 
 
 export default clerkMiddleware((auth ,req)=>{
-  // publicRoutes:['/api/webhooks/clerk']
+  publicRoutes:['/api/webhooks/clerk']
     if(protectedRoutes(req))
       {
         auth().protect();
