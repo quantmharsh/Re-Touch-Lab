@@ -42,7 +42,7 @@ export const connectToDatabase=async()=>{
         throw new Error("Missing mongodb uri");
     }
     cached.promise=cached.promise ||mongoose.connect(MONGODB_URL ,{
-        dbName:"RETOUCHLAB" , bufferCommands:false
+        dbName:" NEWRETOUCHLAB" , bufferCommands:false
         
     })
     cached.conn=await cached.promise;
