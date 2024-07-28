@@ -1,7 +1,19 @@
 
 import mongoose , {Mongoose} from 'mongoose'
 const MONGODB_URL=process.env.MONGODB_URL
-
+// Attach event handlers to monitor connection status
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose connected to the database');
+  });
+  
+  mongoose.connection.on('error', (err) => {
+    console.error('Mongoose connection error:', err);
+  });
+  
+  mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose disconnected from the database');
+  });
+  
 interface MongooseConnection{
     conn:Mongoose|null;
     promise:Promise<Mongoose>|null;
@@ -21,7 +33,8 @@ if(!cached)
 }
 export const connectToDatabase=async()=>{
     if(cached.conn)
-    {
+    { 
+        console.log("Returning cached.conn" , cached.conn)
         return cached.conn
     }
     if(!MONGODB_URL)
@@ -30,7 +43,9 @@ export const connectToDatabase=async()=>{
     }
     cached.promise=cached.promise ||mongoose.connect(MONGODB_URL ,{
         dbName:"RETOUCHLAB" , bufferCommands:false
+        
     })
     cached.conn=await cached.promise;
+    console.log("Connected to database" , cached.conn);
     return cached.conn;
 }
