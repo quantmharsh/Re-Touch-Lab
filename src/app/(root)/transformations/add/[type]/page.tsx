@@ -1,10 +1,35 @@
+import Header from '@/components/shared/Header'
 import React from 'react'
+import { transformationTypes } from '../../../../../../constants'
+import TransformationForm from '@/components/shared/TransformationForm';
+import { useUser } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
+import User from '@/lib/database/models/user.model';
+import { getUserById } from '@/lib/actions/user.actions';
+import { redirect } from 'next/navigation';
 
-const AddTransformationTypePage = () => {
+
+const AddTransformationTypePage =async ({params:{type}}:SearchParamProps) => {
+  const transformation =transformationTypes[type];
+  //getting userID from clerk
+const{userId}=auth();
+//from that id we are finding  user in our mongodbd atabase
+if(!userId)
+{
+ redirect('/sign-in')
+}
+const user=await getUserById(userId!) 
   return (
+    <>
     <div>
-      Add Transformation Type Page
+    <Header title={transformation.title}subtitle={transformation.subTitle}/>
     </div>
+    <section className='mt-10'>
+    <TransformationForm action="Add"   userId={user._id} type={transformation.type as  TransformationTypeKey}
+    creditBalance={user.creditBalance}
+    />
+    </section>
+    </>
   )
 }
 
