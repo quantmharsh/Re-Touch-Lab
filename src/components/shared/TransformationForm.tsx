@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/select";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions";
+import MediaUploader from "./MediaUploader";
 
 const TransformationForm = ({
 	action,
@@ -60,7 +61,7 @@ const TransformationForm = ({
 	const [isTransforming, setIsTransforming] = useState(false);
 	const [transformationConfig, setTransformationConfig] = useState(config);
 	//use Transition hook  (it helps to update the state without blocking the UI)
-	 const[isPending , startTransition]=useTransition();
+	const [isPending, startTransition] = useTransition();
 
 	//Defining intiial values of our form
 	const initialValues =
@@ -118,20 +119,16 @@ const TransformationForm = ({
 		}, 1000);
 		return onChangeField(value);
 	};
-	const onTransformHandler = async() => {
-      setIsTransforming(true)
-	  setTransformationConfig(
-		//Merges key of both object to create new object
-		deepMergeObjects(newTransformation ,transformationConfig)
-	  )
-		setNewTransformation(null)
-		startTransition(async()=>
-		{
-			await updateCredits(userId ,creditFee)
-		})
-		
-	  
-		
+	const onTransformHandler = async () => {
+		setIsTransforming(true);
+		setTransformationConfig(
+			//Merges key of both object to create new object
+			deepMergeObjects(newTransformation, transformationConfig)
+		);
+		setNewTransformation(null);
+		startTransition(async () => {
+			await updateCredits(userId, creditFee);
+		});
 	};
 
 	return (
@@ -217,6 +214,22 @@ const TransformationForm = ({
 						)}
 					</div>
 				)}
+				  <div className="media-uploader-field">
+					<CustomField
+					control={form.control}
+					name="publicId"
+					className="flex size-full flex-col"
+					render={({field})=>(
+						<MediaUploader
+						onValueChange={field.onChange}
+						setImage={setImage}
+						publicId={field.value}
+						image={image}
+						type={type}
+						/>
+					)}/>
+
+				  </div>
 				<div className=" flex flex-col gap-4">
 					<Button
 						type="button"
