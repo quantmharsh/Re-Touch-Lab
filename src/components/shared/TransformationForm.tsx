@@ -42,6 +42,7 @@ import {
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions";
 import MediaUploader from "./MediaUploader";
+import TransformedImage from "./TransformedImage";
 
 const TransformationForm = ({
 	action,
@@ -214,22 +215,31 @@ const TransformationForm = ({
 						)}
 					</div>
 				)}
-				  <div className="media-uploader-field">
+				<div className="media-uploader-field">
 					<CustomField
-					control={form.control}
-					name="publicId"
-					className="flex size-full flex-col"
-					render={({field})=>(
-						<MediaUploader
-						onValueChange={field.onChange}
-						setImage={setImage}
-						publicId={field.value}
-						image={image}
-						type={type}
-						/>
-					)}/>
+						control={form.control}
+						name="publicId"
+						className="flex size-full flex-col"
+						render={({ field }) => (
+							<MediaUploader
+								onValueChange={field.onChange}
+								setImage={setImage}
+								publicId={field.value}
+								image={image}
+								type={type}
+							/>
+						)}
+					/>
+					<TransformedImage 
+					image={image}
+					isTransforming={isTransforming}
+					setIsTransforming={setIsTransforming}
+					type={type}
+					title={form.getValues().title}
+					transformationConfig={transformationConfig}
 
-				  </div>
+					/>
+				</div>
 				<div className=" flex flex-col gap-4">
 					<Button
 						type="button"
