@@ -31,7 +31,8 @@ const TransformedImage = ({
 					</button>
 				)}
 			</div>
-            //if we get the transformed image then render it or else render the skeleton of transformed image
+			//if we get the transformed image then render it or else render the
+			skeleton of transformed image
 			{image?.publicId && transformationConfig ? (
 				<div className="relative">
 					<CldImage
@@ -52,17 +53,19 @@ const TransformedImage = ({
 								setIsTransforming && setIsTransforming(false);
 							}, 8000);
 						}}
-                        //spreading transformationconfig  to get all the transformation that we have applied on image
-                        {...transformationConfig}
+						//spreading transformationconfig  to get all the transformation that we have applied on image
+						{...transformationConfig}
 					/>
-                    {isTransforming && (
-                        <div className="transforming-loader">
-                            <Image src="assets/icons/loader.svg"
-                             alt="loader"
-                             height={50}
-                             width={50}/>
-                            </div>
-                    )  }
+					{isTransforming && (
+						<div className="transforming-loader">
+							<Image
+								src="assets/icons/loader.svg"
+								alt="loader"
+								height={50}
+								width={50}
+							/>
+						</div>
+					)}
 				</div>
 			) : (
 				<div className="transformed-placeholder">Transformed image</div>

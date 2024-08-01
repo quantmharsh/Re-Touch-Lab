@@ -24,7 +24,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import {
 	aspectRatioOptions,
 	creditFee,
@@ -43,6 +43,10 @@ import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions";
 import MediaUploader from "./MediaUploader";
 import TransformedImage from "./TransformedImage";
+import { getCldImageUrl } from "next-cloudinary";
+import { addImage, updateImage } from "@/lib/actions/image.actions";
+import { useRouter } from "next/navigation";
+import { InsufficientCreditsModal } from "./InsufficientCreditModals";
 
 const TransformationForm = ({
 	action,
@@ -63,6 +67,7 @@ const TransformationForm = ({
 	const [transformationConfig, setTransformationConfig] = useState(config);
 	//use Transition hook  (it helps to update the state without blocking the UI)
 	const [isPending, startTransition] = useTransition();
+	const router=useRouter();
 
 	//Defining intiial values of our form
 	const initialValues =
@@ -82,10 +87,81 @@ const TransformationForm = ({
 	});
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
+ async 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
+		setIsSubmitting(true);
+		//get the transformaationul
+		if(data || image)
+		{
+		const transformaationurl=getCldImageUrl({
+			width:image?.width ,
+			height:image?.height,
+			src:image?.publicId ,
+			...transformationConfig
+
+
+		})
+		const imageData={
+			title:values?.title,
+			width:image?.width,
+			height:image?.height,
+			publicId:image?.publicId ,
+			transformationType:type,
+			config:transformationConfig,
+			secureURL:image?.secureURL,
+			transformationURL:transformaationurl,
+			aspectRatio:values?.aspectRatio,
+			prompt:values?.prompt,
+			color:values?.color
+
+
+			
+		}
+		if(action==="Add")
+		{  
+			try {
+				const newImage=await addImage({
+
+				  image: imageData,
+					userId,
+					path:"/"
+
+				})
+				if(newImage)
+				{
+					form.reset();
+					setImage(data)
+					router.push(`/transformations/${newImage._id}`)
+
+				}
+				
+			} catch (error) {
+				console.log(error);
+			}
+
+		}
+		if(action==="Update")
+		{
+			try {
+				const updatedImage=  await updateImage({
+					image:{...imageData ,
+						_id:data._id
+					} ,
+					userId ,
+					path:`/transformations/${data._id}`
+				})
+				if(updatedImage)
+				{
+					router.push(`/transformations/${updatedImage._id}`)
+				}
+				
+			} catch (error) {
+				console.log(error)
+			}
+		}
+	}
 	}
 	//Select  field handler
 	const onSelectFieldHandler = (
@@ -132,9 +208,22 @@ const TransformationForm = ({
 		});
 	};
 
+	//use effect to  setNewTransformation when image is uploaded when we are trying to restore or removebackground
+	useEffect(() => {
+		if(image || type==="removeBackground"|| type==="restore")
+		{
+			setNewTransformation(transformationType.config)
+		}
+	
+	}, [image ,type , transformationType.config])
+	
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+				//if less credit balance then render the Insufficient Modal
+				{creditBalance < Math.abs(creditFee) && (
+					<InsufficientCreditsModal/>
+				)}
 				<CustomField
 					control={form.control}
 					name="title"
