@@ -179,23 +179,20 @@ const TransformationForm = ({
 		setNewTransformation(transformationType.config);
 		return onChangeField(value);
 	};
-	const onInputChangeHandler = (
-		value: string,
-		type: string,
-		fieldName: string,
-		onChangeField: (value: string) => void
-	) => {
+
+	const onInputChangeHandler = (fieldName: string, value: string, type: string, onChangeField: (value: string) => void) => {
 		debounce(() => {
-			setNewTransformation((prevState: any) => ({
-				...prevState,
-				[type]: {
-					...prevState?.[type],
-					[fieldName === "prompt" ? "prompt" : "to"]: value,
-				},
-			}));
-		}, 1000);
-		return onChangeField(value);
-	};
+		  setNewTransformation((prevState: any) => ({
+			...prevState,
+			[type]: {
+			  ...prevState?.[type],
+			  [fieldName === 'prompt' ? 'prompt' : 'to' ]: value 
+			}
+		  }))
+		}, 1000)();
+		  
+		return onChangeField(value)
+	  }
 	const onTransformHandler = async () => {
 		setIsTransforming(true);
 		setTransformationConfig(
@@ -237,7 +234,9 @@ const TransformationForm = ({
 							<Select
 								onValueChange={(value) =>
 									onSelectFieldHandler(value, field.onChange)
-								}>
+								}
+								value={field.value}
+								>
 								<SelectTrigger className="select-field">
 									<SelectValue placeholder="Select size" />
 								</SelectTrigger>
@@ -257,7 +256,7 @@ const TransformationForm = ({
 					/>
 				)}
 				{(type === "remove" || type === "recolor") && (
-					<div>
+					<div className="prompt-field">
 						<CustomField
 							control={form.control}
 							name="prompt"

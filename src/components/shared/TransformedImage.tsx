@@ -1,8 +1,9 @@
+"use client"
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { CldImage } from "next-cloudinary";
-import { dataUrl, debounce, getImageSize } from "@/lib/utils";
+import { CldImage, getCldImageUrl } from "next-cloudinary";
+import { dataUrl, debounce, download, getImageSize } from "@/lib/utils";
 import { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
 
 const TransformedImage = ({
@@ -12,9 +13,18 @@ const TransformedImage = ({
 	setIsTransforming,
 	transformationConfig,
 	title,
-	hasDownload = true,
+	hasDownload = false,
 }: TransformedImageProps) => {
-	const downloadHandler = () => {};
+	const downloadHandler = (e:React.MouseEvent<HTMLButtonElement , MouseEvent>) => {
+		e.preventDefault();
+		download(getCldImageUrl({
+			width:image?.width ,
+			height:image?.height,
+			src:image?.publicId,
+			...transformationConfig
+
+		}),title)
+	};
 	return (
 		<div className="flex flex-col gap-4">
 			<div className=" flex-between">
@@ -31,8 +41,8 @@ const TransformedImage = ({
 					</button>
 				)}
 			</div>
-			//if we get the transformed image then render it or else render the
-			skeleton of transformed image
+			{/* //if we get the transformed image then render it or else render the
+			skeleton of transformed image */}
 			{image?.publicId && transformationConfig ? (
 				<div className="relative">
 					<CldImage
@@ -51,7 +61,7 @@ const TransformedImage = ({
 						onError={() => {
 							debounce(() => {
 								setIsTransforming && setIsTransforming(false);
-							}, 8000);
+							}, 8000)();
 						}}
 						//spreading transformationconfig  to get all the transformation that we have applied on image
 						{...transformationConfig}
@@ -64,6 +74,7 @@ const TransformedImage = ({
 								height={50}
 								width={50}
 							/>
+							<p className="text-white ">Please wait ...</p>
 						</div>
 					)}
 				</div>

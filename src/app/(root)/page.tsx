@@ -9,6 +9,7 @@ export default async function  Home({searchParams}:SearchParamProps) {
   //for pagination we are getting the page and searchquery
   const page=Number(searchParams?.page)||1;
   const searchQuery=(searchParams?.query as string )||" "
+  //getting all the images based on what user is tryiing too search
   const images=await getAllImages({page ,searchQuery})
   return (
    <div> 
