@@ -42,7 +42,7 @@ import {
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions";
 import MediaUploader from "./MediaUploader";
-import TransformedImage from "./TransformedImage";
+import TransformedImage from  "./TransformedImage";
 import { getCldImageUrl } from "next-cloudinary";
 import { addImage, updateImage } from "@/lib/actions/image.actions";
 import { useRouter } from "next/navigation";
@@ -163,7 +163,7 @@ const TransformationForm = ({
 		}
 	}
 	}
-	//Select  field handler
+	//Select  field handler for Image FILL functionality 
 	const onSelectFieldHandler = (
 		value: string,
 		onChangeField: (value: string) => void
@@ -179,7 +179,7 @@ const TransformationForm = ({
 		setNewTransformation(transformationType.config);
 		return onChangeField(value);
 	};
-
+//for REMOVE and RECOLOR   Image functionalitry 
 	const onInputChangeHandler = (fieldName: string, value: string, type: string, onChangeField: (value: string) => void) => {
 		debounce(() => {
 		  setNewTransformation((prevState: any) => ({
