@@ -33,8 +33,10 @@ export async function POST(request: Request) {
       buyerId: metadata?.buyerId || "",
       createdAt: new Date(),
     };
+    console.log("going to create new transaction in stripe route.ts")
 
     const newTransaction = await createTransaction(transaction);
+    console.log("returning after creating  newTransaction inside stripe roiute.ts"  , newTransaction)
     
     return NextResponse.json({ message: "OK", transaction: newTransaction });
   }

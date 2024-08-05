@@ -79,15 +79,18 @@ export async function deleteUser(clerkId: string) {
 export async function updateCredits(userId: string, creditFee: number) {
   try {
     await connectToDatabase();
-
+   console.log("inside updatecredits ")
     const updatedUserCredits = await User.findOneAndUpdate(
       { _id: userId },
       // inc is used to change the value or increment  it by adding or subtracting
       { $inc: { creditBalance: creditFee }},
       { new: true }
     )
+    
+      
 
     if(!updatedUserCredits) throw new Error("User credits update failed");
+    console.log("updated user credits " , updatedUserCredits)
 
     return JSON.parse(JSON.stringify(updatedUserCredits));
   } catch (error) {

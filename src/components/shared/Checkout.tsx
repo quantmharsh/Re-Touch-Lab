@@ -55,7 +55,7 @@ const Checkout = ({
       credits,
       buyerId,
     };
-
+      console.log("going for checkoutCredits")
     await checkOutCredits(transaction);
   };
 
