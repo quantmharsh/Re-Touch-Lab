@@ -196,7 +196,7 @@ const TransformationForm = ({
 	const onTransformHandler = async () => {
 		setIsTransforming(true);
 		setTransformationConfig(
-			//Merges key of both object to create new object
+			// Merges key of both object to create new object
 			deepMergeObjects(newTransformation, transformationConfig)
 		);
 		setNewTransformation(null);
@@ -217,7 +217,7 @@ const TransformationForm = ({
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				//if less credit balance then render the Insufficient Modal
+				{/* //if less credit balance then render the Insufficient Modal */}
 				{creditBalance < Math.abs(creditFee) && (
 					<InsufficientCreditsModal/>
 				)}
