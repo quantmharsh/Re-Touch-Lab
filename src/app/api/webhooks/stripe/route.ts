@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const body = await request.text();
 
   const sig = request.headers.get("stripe-signature") as string;
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+  const endpointSecret = process.env.STRIPE_SIGNING_SECRET_KEY!;
 
   let event;
 
@@ -20,10 +20,12 @@ export async function POST(request: Request) {
 
   // Get the ID and type
   const eventType = event.type;
+  console.log("event type " , event.type);
 
   // CREATE
   if (eventType === "checkout.session.completed") {
     const { id, amount_total, metadata } = event.data.object;
+    console.log(id , amount_total , metadata);
 
     const transaction = {
       stripeId: id,
@@ -33,6 +35,7 @@ export async function POST(request: Request) {
       buyerId: metadata?.buyerId || "",
       createdAt: new Date(),
     };
+    console.log("Transaction object " , transaction);
     console.log("going to create new transaction in stripe route.ts")
 
     const newTransaction = await createTransaction(transaction);

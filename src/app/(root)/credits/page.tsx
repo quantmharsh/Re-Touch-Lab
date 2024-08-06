@@ -65,6 +65,7 @@ const Credits = async () => {
                 </Button>
               ) : (
                 <SignedIn>
+                 
                   <Checkout
                     plan={plan.name}
                     amount={plan.price}
