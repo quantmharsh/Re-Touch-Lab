@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 import { createTransaction } from "@/lib/actions/transaction.actions";
+import { notifyEvent } from "@/lib/ping-panda-integration/eventNotifier";
 import { NextResponse } from "next/server";
 import stripe from "stripe";
 //creating a transaction and storing it in our db when this event is initiatd 
@@ -35,11 +36,33 @@ export async function POST(request: Request) {
       buyerId: metadata?.buyerId || "",
       createdAt: new Date(),
     };
+    
+    const newTransaction = await createTransaction(transaction);
+    console.log("returning after creating  newTransaction inside stripe roiute.ts"  , newTransaction)
+    //Notify  via Custom Event handler
+    try {
+       await notifyEvent({
+         category:"retouchlab",
+         fields:{
+          userId:transaction.buyerId, 
+          plan:transaction.plan,
+          amount:transaction.amount
+          
+         }
+       })
+       console.log("Transaction  and notification processed successfully");
+       return NextResponse.json({
+        message:"Transaction and  notification processed successfully"
+
+       })
+    } catch (error) {
+      console.error("Error processing transaction or notifying event:", error);
+      // return NextResponse.json({ message: "Error while sending notifications", error });
+      
+    }
     console.log("Transaction object " , transaction);
     console.log("going to create new transaction in stripe route.ts")
 
-    const newTransaction = await createTransaction(transaction);
-    console.log("returning after creating  newTransaction inside stripe roiute.ts"  , newTransaction)
     
     return NextResponse.json({ message: "OK", transaction: newTransaction });
   }
