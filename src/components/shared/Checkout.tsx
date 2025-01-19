@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { Button } from "../ui/button";
 import { checkOutCredits } from "@/lib/actions/transaction.actions";
+import { notifyEvent } from "@/lib/ping-panda-integration/eventNotifier";
 
 const Checkout = ({
   plan,
@@ -57,6 +58,15 @@ const Checkout = ({
     };
       console.log("going for checkoutCredits")
     await checkOutCredits(transaction);
+     await notifyEvent({
+             category:"retouchlab",
+             fields:{
+              userId:transaction.buyerId, 
+              plan:transaction.plan,
+              amount:transaction.amount
+              
+             }
+           })
   };
 
   return (

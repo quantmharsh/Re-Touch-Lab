@@ -10,8 +10,10 @@ interface NotifyEventPayload{
 }
 
 export async function notifyEvent(payload:NotifyEventPayload):Promise<void>{
-
+     console.log('Notify Event' , payload);
     try {
+        console.log("inside notifyEvent ")
+       
         const response=await fetch(API_URL , {
             method:"POST",
             headers:{
@@ -30,5 +32,6 @@ export async function notifyEvent(payload:NotifyEventPayload):Promise<void>{
     } catch (error) {
           console.error("Error notifying event", error);
     }
+    console.log("Event notified  successfully");
 
 }

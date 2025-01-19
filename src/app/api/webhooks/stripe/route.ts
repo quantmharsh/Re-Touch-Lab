@@ -12,16 +12,19 @@ export async function POST(request: Request) {
   const endpointSecret = process.env.STRIPE_SIGNING_SECRET_KEY!;
 
   let event;
-
+   console.log("body " , body) ;
+   console.log("sig", sig);
+   console.log("endpointSecret", endpointSecret);
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    console.log("Event constructed successfully");
   } catch (err) {
     return NextResponse.json({ message: "Webhook error", error: err });
   }
 
   // Get the ID and type
   const eventType = event.type;
-  console.log("event type " , event.type);
+  console.log("event type " );
 
   // CREATE
   if (eventType === "checkout.session.completed") {
