@@ -58,15 +58,15 @@ const Checkout = ({
     };
       console.log("going for checkoutCredits")
     await checkOutCredits(transaction);
-     await notifyEvent({
-             category:"retouchlab",
-             fields:{
-              userId:transaction.buyerId, 
-              plan:transaction.plan,
-              amount:transaction.amount
+    //  await notifyEvent({
+    //          category:"retouchlab",
+    //          fields:{
+    //           userId:transaction.buyerId, 
+    //           plan:transaction.plan,
+    //           amount:transaction.amount
               
-             }
-           })
+    //          }
+    //        })
   };
 
   return (

@@ -32,6 +32,6 @@ export async function notifyEvent(payload:NotifyEventPayload):Promise<void>{
     } catch (error) {
           console.error("Error notifying event", error);
     }
-    console.log("Event notified  successfully");
+    // console.log("Event notified  successfully");
 
 }
